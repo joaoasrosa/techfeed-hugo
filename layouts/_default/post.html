@@ -9,23 +9,19 @@
   {{ else }}
   <!-- /image cdn -->
 
-  <!-- image processing for multiple device -->
-  {{ if fileExists (add `assets/` $imagePath) }}
-  {{ $image:= resources.Get $imagePath }}
-  {{ $imageFallback:= $image.Resize "1110x" }}
-  {{ $imageXL:= $image.Resize "1110x webp" }}
-  {{ $imageLG:= $image.Resize "650x webp" }}
-  {{ $imageMD:= $image.Resize "600x webp" }}
-  {{ $imageSM:= $image.Resize "545x webp" }}
-  <a href="{{.RelPermalink}}"></a>
-    <picture>
-      <source srcset="{{ $imageSM.RelPermalink }}" media="(max-width: 575px)">
-      <source srcset="{{ $imageMD.RelPermalink }}" media="(max-width: 767px)">
-      <source srcset="{{ $imageLG.RelPermalink }}" media="(max-width: 991px)">
-      <source srcset="{{ $imageXL.RelPermalink }}">
-      <img loading="lazy" decoding="async" class="img-fluid w-100" src="{{$imageFallback.RelPermalink}}"
-        alt="post image" width="{{$image.Width}}" height="{{$image.Height}}">
-    </picture>
+  <a href="{{.RelPermalink}}">
+    {{ with .Params.image }}
+    {{ if fileExists (add `assets/` .) }}
+    {{$image:= resources.Get . }}
+    {{ $imageFallback:= $image.Resize "1110x" }}
+    {{ $imageXL:= $image.Resize "1110x webp" }}
+    {{ $imageLG:= $image.Resize "650x webp" }}
+    {{ $imageMD:= $image.Resize "600x webp" }}
+    {{ $imageSM:= $image.Resize "545x webp" }}
+    <img loading="lazy" decoding="async" class="img-fluid w-100" src="{{$imageFallback.RelPermalink}}" alt="post image"
+      width="{{$image.Width}}" height="{{$image.Height}}">
+    {{end}}
+    {{end}}
   </a>
   {{ end }}
   <!-- /image processing for multiple device -->
